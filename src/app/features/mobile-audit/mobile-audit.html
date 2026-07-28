@@ -1,0 +1,58 @@
+<div class="min-h-screen bg-slate-100 dark:bg-slate-900 flex flex-col p-4 transition-colors duration-200">
+  <div class="w-full max-w-md mx-auto">
+    <p-card header="Auditoría de Inventario" styleClass="w-full shadow-lg rounded-2xl mb-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100">
+      <div class="flex flex-col gap-4">
+        <label for="barcode" class="text-slate-700 dark:text-slate-200 font-semibold text-lg">Escanear Código de Barras</label>
+        <span class="p-input-icon-left w-full flex relative">
+          <i class="pi pi-barcode z-10 ml-3 mt-4 absolute text-2xl text-slate-500 dark:text-slate-400"></i>
+          <input 
+            id="barcode"
+            type="text" 
+            pInputText 
+            [(ngModel)]="barcode" 
+            (keyup.enter)="onScan()"
+            placeholder="Ingrese código..." 
+            class="w-full pl-12 py-4 text-2xl font-bold rounded-xl border-2 border-indigo-500 dark:border-indigo-400 bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors duration-200" 
+            autofocus
+          />
+        </span>
+        <p-button label="Buscar / Escanear" icon="pi pi-search" size="large" styleClass="w-full p-button-lg rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white border-none shadow-sm transition-colors duration-200" (onClick)="onScan()"></p-button>
+      </div>
+    </p-card>
+
+    <p-card *ngIf="scannedProduct" header="Detalles del Producto" styleClass="w-full shadow-lg rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100">
+      <div class="flex flex-col gap-4">
+        <div class="bg-indigo-50 dark:bg-indigo-950/50 p-4 rounded-xl border border-indigo-100 dark:border-indigo-900">
+          <h3 class="text-xl font-bold text-indigo-800 dark:text-indigo-200 m-0">{{ scannedProduct.nombre }}</h3>
+          <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Código: {{ scannedProduct.codigoBarras }}</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div class="bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 p-4 rounded-xl text-center">
+            <span class="block text-sm text-slate-500 dark:text-slate-400 mb-1">Cantidad Esperada</span>
+            <span class="text-3xl font-bold text-slate-800 dark:text-slate-100">{{ scannedProduct.expectedQty }}</span>
+          </div>
+          <div class="border p-4 rounded-xl text-center bg-amber-50 dark:bg-amber-950/50 border-amber-200 dark:border-amber-800">
+            <span class="block text-sm text-amber-700 dark:text-amber-300 mb-1">Cantidad Real</span>
+            <input 
+              type="number" 
+              pInputText 
+              [(ngModel)]="actualQty" 
+              class="w-full text-center text-3xl font-bold border-none bg-transparent focus:ring-0 text-slate-800 dark:text-slate-100 outline-none" 
+              placeholder="0"
+            />
+          </div>
+        </div>
+
+        <p-button 
+          label="Guardar Auditoría" 
+          icon="pi pi-save" 
+          size="large" 
+          styleClass="w-full p-button-lg rounded-xl mt-4 bg-emerald-600 hover:bg-emerald-700 text-white border-none shadow-sm transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed" 
+          [disabled]="actualQty === null"
+          (onClick)="saveAudit()">
+        </p-button>
+      </div>
+    </p-card>
+  </div>
+</div>
