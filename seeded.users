@@ -1,0 +1,15 @@
+Root:
+Usuario: admin
+Contraseña: Admin123
+Gerente:
+Usuario: gerente
+Contraseña: Farmacia123
+Administrador:
+Usuario: administrador
+Contraseña: Farmacia123
+Cajero:
+Usuario: cajero
+Contraseña: Farmacia123
+Vendedor:
+Usuario: vendedor
+Contraseña: Farmacia123

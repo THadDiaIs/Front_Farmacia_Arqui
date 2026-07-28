@@ -1,1 +1,174 @@
-/* You can add global styles to this file, and also import other style files */
+@import "primeicons/primeicons.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================
+   PRIMENG & GLOBAL THEME TRANSLATION MATRIX
+   ========================================== */
+
+:root {
+  --font-family: "Inter", sans-serif;
+}
+
+/* Modo Oscuro - Traducción Dinámica de Tokens PrimeNG a la Paleta Slate / Indigo */
+.dark {
+  --surface-a: #1e293b;
+  /* slate-800 - Cards & Dialogs */
+  --surface-b: #0f172a;
+  /* slate-900 - Canvas & Main Ground */
+  --surface-c: rgba(255, 255, 255, 0.03);
+  --surface-d: #334155;
+  /* slate-700 - Borders & Elements */
+  --surface-e: #1e293b;
+  --surface-f: #1e293b;
+  --text-color: #f1f5f9;
+  /* slate-100 - Primary Text */
+  --text-color-secondary: #94a3b8;
+  /* slate-400 - Secondary Text */
+  --primary-color: #818cf8;
+  /* indigo-400 - Primary Action in Dark */
+  --primary-color-text: #0f172a;
+  /* slate-900 */
+  --surface-0: #0f172a;
+  /* slate-900 */
+  --surface-50: #1e293b;
+  /* slate-800 - Table headers, dropdown items */
+  --surface-100: #334155;
+  /* slate-700 */
+  --surface-200: #475569;
+  /* slate-600 */
+  --surface-300: #64748b;
+  /* slate-500 */
+  --surface-400: #94a3b8;
+  /* slate-400 */
+  --surface-500: #cbd5e1;
+  /* slate-300 */
+  --surface-600: #e2e8f0;
+  /* slate-200 */
+  --surface-700: #f1f5f9;
+  /* slate-100 */
+  --surface-800: #f8fafc;
+  /* slate-50 */
+  --surface-900: #ffffff;
+  --surface-ground: #0f172a;
+  /* slate-900 */
+  --surface-section: #0f172a;
+  /* slate-900 */
+  --surface-card: #1e293b;
+  /* slate-800 */
+  --surface-overlay: #1e293b;
+  /* slate-800 - Menus, Dropdowns, Popups */
+  --surface-border: #334155;
+  /* slate-700 - Borders */
+  --surface-hover: rgba(255, 255, 255, 0.05);
+  --focus-ring: 0 0 0 0.2rem rgba(129, 140, 248, 0.25);
+  --maskbg: rgba(0, 0, 0, 0.6);
+  --highlight-bg: rgba(99, 102, 241, 0.2);
+  --highlight-text-color: #f1f5f9;
+}
+
+/* Ajustes adicionales para componentes PrimeNG en Modo Oscuro */
+.dark .p-component,
+.dark .p-inputtext,
+.dark .p-dropdown,
+.dark .p-dialog,
+.dark .p-card,
+.dark .p-menu,
+.dark .p-datatable .p-datatable-thead>tr>th,
+.dark .p-datatable .p-datatable-tbody>tr>td {
+  color: var(--text-color);
+  border-color: var(--surface-border);
+}
+
+.dark .p-datatable .p-datatable-thead>tr>th {
+  background-color: var(--surface-card);
+  color: var(--text-color);
+}
+
+.dark .p-datatable .p-datatable-tbody>tr {
+  background-color: var(--surface-b);
+}
+
+.dark .p-datatable .p-datatable-tbody>tr:nth-child(even) {
+  background-color: var(--surface-a);
+}
+
+.dark .p-datatable .p-datatable-tbody>tr:hover {
+  background-color: var(--surface-hover) !important;
+}
+
+.dark .p-inputtext,
+.dark .p-dropdown {
+  background-color: var(--surface-b);
+  border-color: var(--surface-border);
+  color: var(--text-color);
+}
+
+.dark .p-inputtext:enabled:focus,
+.dark .p-dropdown:not(.p-disabled).p-focus {
+  border-color: var(--primary-color);
+  box-shadow: var(--focus-ring);
+}
+
+.dark .p-dialog .p-dialog-header,
+.dark .p-dialog .p-dialog-content,
+.dark .p-dialog .p-dialog-footer {
+  background-color: var(--surface-card);
+  color: var(--text-color);
+  border-color: var(--surface-border);
+}
+
+.dark .p-menu,
+.dark .p-dropdown-panel {
+  background-color: var(--surface-card);
+  border-color: var(--surface-border);
+}
+
+.dark .p-menuitem-link .p-menuitem-text,
+.dark .p-menuitem-link .p-menuitem-icon,
+.dark .p-dropdown-item {
+  color: var(--text-color);
+}
+
+.dark .p-menuitem-link:hover,
+.dark .p-dropdown-item:hover {
+  background-color: var(--surface-hover) !important;
+}
+
+/* Scrollbar Personalizado y Transiciones Suaves */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
