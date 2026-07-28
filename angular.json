@@ -6,7 +6,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "farmacia-front": {
+    "farmas": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -66,10 +66,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "farmacia-front:build:production"
+              "buildTarget": "farmas:build:production"
             },
             "development": {
-              "buildTarget": "farmacia-front:build:development"
+              "buildTarget": "farmas:build:development"
             }
           },
           "defaultConfiguration": "development"

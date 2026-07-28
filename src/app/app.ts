@@ -16,7 +16,7 @@ import { Modulo } from './core/models/permissions.model';
   styleUrl: './app.css'
 })
 export class App implements OnInit {
-  protected readonly title = signal('farmacia-front');
+  protected readonly title = signal('FarmAS');
   authService = inject(AuthService);
   private router = inject(Router);
   private platformId = inject(PLATFORM_ID);

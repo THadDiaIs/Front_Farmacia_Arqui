@@ -1,13 +1,13 @@
 {
-  "name": "farmacia-front",
-  "version": "0.0.0",
+  "name": "farmas",
+  "version": "1.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:farmacia-front": "node dist/farmacia-front/server/server.mjs"
+    "serve:ssr:farmas": "node dist/farmas/server/server.mjs"
   },
   "private": true,
   "packageManager": "npm@11.8.0",
