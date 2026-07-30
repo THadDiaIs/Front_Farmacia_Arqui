@@ -1,238 +1,258 @@
-<div class="p-6 bg-slate-50 dark:bg-slate-900 min-h-screen grid grid-cols-1 lg:grid-cols-12 gap-6 items-start transition-colors duration-200">
+<div class="p-4 lg:p-6 bg-slate-50 dark:bg-slate-900 min-h-[calc(100vh-4rem)] flex flex-col gap-6 transition-colors duration-200">
   
-  <!-- LEFT COLUMN (Pending Orders + Metrics) -->
-  <div class="lg:col-span-8 flex flex-col gap-6">
-    
-    <!-- TOP BOX: Banded rows pending orders list table -->
-    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-5 flex flex-col">
-      <div class="flex justify-between items-center mb-4">
-        <div>
-          <h2 class="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
-            <i class="pi pi-inbox text-indigo-600 dark:text-indigo-400"></i> Órdenes Pendientes de Cobro
-          </h2>
-          <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Seleccione una orden enviada desde los puntos de venta para procesar el cobro.</p>
-        </div>
-        <span class="bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200 dark:border-indigo-800 text-indigo-700 dark:text-indigo-300 text-xs font-bold px-3 py-1 rounded-full">
-          {{ pendingOrdersCount }} pendientes
-        </span>
-      </div>
-
-      <!-- Banded rows table -->
-      <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-700">
-        <p-table [value]="pendingSales" styleClass="p-datatable-sm p-datatable-striped">
-          <ng-template pTemplate="header">
-            <tr class="bg-slate-50 dark:bg-slate-800/80 text-slate-700 dark:text-slate-200 text-xs uppercase">
-              <th class="py-3 px-4">Order Code</th>
-              <th class="py-3 px-4">Productos</th>
-              <th class="py-3 px-4 text-right">Total</th>
-              <th class="py-3 px-4 text-center">Vendedor</th>
-              <th class="py-3 px-4 text-center">Acción</th>
-            </tr>
-          </ng-template>
-
-          <ng-template pTemplate="body" let-sale let-i="rowIndex">
-            <tr class="text-sm border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/40 transition-colors"
-                [class.bg-indigo-50\/50]="selectedSale?.id === sale.id"
-                [class.dark:bg-indigo-950\/30]="selectedSale?.id === sale.id">
-              
-              <!-- Order Code -->
-              <td class="px-4 font-mono font-bold text-indigo-600 dark:text-indigo-400 text-sm">
-                {{ sale.orderCode }}
-              </td>
-
-              <!-- Products Summary -->
-              <td class="px-4">
-                <div class="font-medium text-slate-800 dark:text-slate-100 line-clamp-1">
-                  {{ getProductsSummary(sale) }}
-                </div>
-                <div class="text-[11px] text-slate-400">
-                  {{ sale.fecha | date:'dd/MM/yyyy HH:mm' }}
-                </div>
-              </td>
-
-              <!-- Total -->
-              <td class="px-4 text-right font-bold text-slate-900 dark:text-slate-100">
-                ${{ formatPrice(sale.total) }}
-              </td>
-
-              <!-- Vendedor Code -->
-              <td class="px-4 text-center">
-                <span class="inline-flex items-center gap-1 font-mono text-xs bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 px-2 py-1 rounded-md border border-slate-200 dark:border-slate-700">
-                  <i class="pi pi-user text-[10px] text-slate-400"></i>
-                  {{ sale.vendedorCode }}
-                </span>
-              </td>
-
-              <!-- Select Action -->
-              <td class="px-4 text-center">
-                <p-button [label]="selectedSale?.id === sale.id ? 'Atendiendo' : 'Atender'" 
-                          size="small" 
-                          [severity]="selectedSale?.id === sale.id ? 'primary' : 'secondary'"
-                          [outlined]="selectedSale?.id !== sale.id" 
-                          (onClick)="selectSale(sale)"></p-button>
-              </td>
-            </tr>
-          </ng-template>
-
-          <ng-template pTemplate="emptymessage">
-            <tr>
-              <td colspan="5" class="text-center py-12 text-slate-400 dark:text-slate-500">
-                <i class="pi pi-check-circle text-3xl mb-2 text-emerald-500 block"></i>
-                No hay órdenes pendientes por cobrar en este momento.
-              </td>
-            </tr>
-          </ng-template>
-        </p-table>
-      </div>
-    </div>
-
-    <!-- BOTTOM BOX: Metrics like pending orders, completed orders, etc. -->
-    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-5">
-      <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">
+  <!-- TOP ROW: Metrics -->
+  <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-5 shrink-0">
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">
         Métricas de Caja (Turno Actual)
       </h3>
+      <span class="bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200 dark:border-indigo-800 text-indigo-700 dark:text-indigo-300 text-[10px] font-bold px-2 py-0.5 rounded">En Curso</span>
+    </div>
 
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <!-- Metric 1: Pending Orders -->
-        <div class="bg-amber-50 dark:bg-slate-900 p-4 rounded-xl border border-amber-200 dark:border-amber-800/80 flex items-center justify-between">
-          <div>
-            <span class="text-xs font-semibold text-amber-700 dark:text-amber-400 block">Órdenes Pendientes</span>
-            <span class="text-2xl font-black text-amber-900 dark:text-amber-300">{{ pendingOrdersCount }}</span>
-          </div>
-          <i class="pi pi-clock text-2xl text-amber-500/50"></i>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6">
+      <!-- Metric 1: Pending Orders -->
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 border border-amber-100 dark:border-amber-900/50 flex justify-center items-center shrink-0">
+          <i class="pi pi-clock text-xl"></i>
         </div>
-
-        <!-- Metric 2: Completed Orders -->
-        <div class="bg-emerald-50 dark:bg-slate-900 p-4 rounded-xl border border-emerald-200 dark:border-emerald-800/80 flex items-center justify-between">
-          <div>
-            <span class="text-xs font-semibold text-emerald-700 dark:text-emerald-400 block">Cobradas Hoy</span>
-            <span class="text-2xl font-black text-emerald-900 dark:text-emerald-300">{{ completedOrdersCount }}</span>
-          </div>
-          <i class="pi pi-check-circle text-2xl text-emerald-500/50"></i>
+        <div>
+          <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block mb-0.5">Órdenes Pendientes</span>
+          <span class="text-xl font-black text-slate-900 dark:text-slate-100">{{ pendingOrdersCount }}</span>
         </div>
+      </div>
 
-        <!-- Metric 3: Total Collected -->
-        <div class="bg-indigo-50 dark:bg-slate-900 p-4 rounded-xl border border-indigo-200 dark:border-indigo-800/80 flex items-center justify-between">
-          <div>
-            <span class="text-xs font-semibold text-indigo-700 dark:text-indigo-400 block">Total Cobrado</span>
-            <span class="text-2xl font-black text-indigo-900 dark:text-indigo-300">${{ formatPrice(totalCollectedToday) }}</span>
-          </div>
-          <i class="pi pi-wallet text-2xl text-indigo-500/50"></i>
+      <!-- Metric 2: Completed Orders -->
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/50 flex justify-center items-center shrink-0">
+          <i class="pi pi-check-circle text-xl"></i>
         </div>
+        <div>
+          <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block mb-0.5">Cobradas Hoy</span>
+          <span class="text-xl font-black text-slate-900 dark:text-slate-100">{{ completedOrdersCount }}</span>
+        </div>
+      </div>
 
-        <!-- Metric 4: Average Ticket -->
-        <div class="bg-slate-100 dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-700 flex items-center justify-between">
-          <div>
-            <span class="text-xs font-semibold text-slate-600 dark:text-slate-400 block">Ticket Promedio</span>
-            <span class="text-2xl font-black text-slate-800 dark:text-slate-100">${{ formatPrice(averageTicket) }}</span>
-          </div>
-          <i class="pi pi-chart-bar text-2xl text-slate-400/50"></i>
+      <!-- Metric 3: Total Collected -->
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-900/50 flex justify-center items-center shrink-0">
+          <i class="pi pi-wallet text-xl"></i>
+        </div>
+        <div>
+          <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block mb-0.5">Total Cobrado</span>
+          <span class="text-xl font-black text-slate-900 dark:text-slate-100">${{ formatPrice(totalCollectedToday) }}</span>
+        </div>
+      </div>
+
+      <!-- Metric 4: Average Ticket -->
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 flex justify-center items-center shrink-0">
+          <i class="pi pi-chart-bar text-xl"></i>
+        </div>
+        <div>
+          <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block mb-0.5">Ticket Promedio</span>
+          <span class="text-xl font-black text-slate-900 dark:text-slate-100">${{ formatPrice(averageTicket) }}</span>
         </div>
       </div>
     </div>
-
   </div>
 
-  <!-- RIGHT COLUMN (Order Detail + Cobro Panel) -->
-  <div class="lg:col-span-4 flex flex-col">
-    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 h-full flex flex-col p-6" *ngIf="selectedSale">
-      
-      <!-- Top Title: ORDERCODE -->
-      <div class="pb-4 mb-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center">
-        <div>
-          <span class="text-xs uppercase tracking-wider font-bold text-slate-400">Orden Seleccionada</span>
-          <h2 class="text-3xl font-black font-mono text-indigo-600 dark:text-indigo-400">
-            {{ selectedSale.orderCode }}
-          </h2>
-        </div>
-        <div class="text-right">
-          <span class="text-xs text-slate-400 block">Atendida por:</span>
-          <span class="text-xs font-bold text-slate-700 dark:text-slate-300">{{ selectedSale.vendedorNombre }} ({{ selectedSale.vendedorCode }})</span>
-        </div>
-      </div>
-
-      <!-- Banded rows order details -->
-      <div class="flex-1 flex flex-col mb-4">
-        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
-          Detalles de la Orden
-        </h3>
-        
-        <div class="overflow-y-auto flex-1 max-h-[260px] rounded-xl border border-slate-200 dark:border-slate-700">
-          <table class="w-full text-sm text-left border-collapse">
-            <thead>
-              <tr class="bg-slate-50 dark:bg-slate-800/80 text-slate-500 dark:text-slate-400 text-[11px] uppercase">
-                <th class="py-2 px-3">Producto</th>
-                <th class="py-2 px-3 text-center">Cant.</th>
-                <th class="py-2 px-3 text-right">Subtotal</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let item of selectedSale.items; let i = index" 
-                  [class.bg-slate-50]="i % 2 === 0"
-                  [class.dark:bg-slate-900/40]="i % 2 === 0"
-                  class="border-b border-slate-100 dark:border-slate-700">
-                <td class="py-2.5 px-3">
-                  <div class="font-medium text-slate-800 dark:text-slate-100">{{ item.nombre }}</div>
-                  <div class="text-[10px] text-slate-400 font-mono">{{ item.codigo }}</div>
-                </td>
-                <td class="py-2.5 px-3 text-center font-bold text-slate-700 dark:text-slate-300">
-                  {{ item.cantidad }}
-                </td>
-                <td class="py-2.5 px-3 text-right font-bold text-slate-900 dark:text-slate-100">
-                  ${{ formatPrice(item.subtotal) }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Totals details & Payment method -->
-      <div class="space-y-4 pt-4 border-t border-slate-200 dark:border-slate-700 mt-auto">
-        
-        <div class="space-y-2 text-sm">
-          <div class="flex justify-between items-center text-slate-500 dark:text-slate-400">
-            <span>Subtotal:</span>
-            <span class="font-mono font-medium text-slate-800 dark:text-slate-200">${{ formatPrice(selectedSale.total) }}</span>
-          </div>
-          <div class="flex justify-between items-center text-slate-500 dark:text-slate-400" *ngIf="selectedSale.descuento > 0">
-            <span>Descuento:</span>
-            <span class="font-mono font-medium text-emerald-600 dark:text-emerald-400">-${{ formatPrice(selectedSale.descuento) }}</span>
-          </div>
-        </div>
-
-        <div class="flex flex-col gap-1.5">
-          <label class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Método de Pago</label>
-          <p-dropdown [options]="paymentMethods" 
-                      [(ngModel)]="selectedPaymentMethod" 
-                      optionLabel="label" 
-                      optionValue="value" 
-                      styleClass="w-full"></p-dropdown>
-        </div>
-
-        <div class="bg-slate-50 dark:bg-slate-900/80 p-4 rounded-xl border border-slate-200 dark:border-slate-700 flex justify-between items-center">
-          <span class="text-sm font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Total a Cobrar</span>
-          <span class="text-3xl font-black text-emerald-600 dark:text-emerald-400">${{ formatPrice(selectedSale.total) }}</span>
-        </div>
-
-        <!-- Confirmar button -->
-        <p-button label="Confirmar" 
-                  icon="pi pi-check" 
-                  size="large" 
-                  styleClass="w-full text-lg font-bold py-4 rounded-xl shadow-md bg-emerald-600 hover:bg-emerald-700 text-white border-none transition-colors duration-200" 
-                  (onClick)="cobrar()"></p-button>
-      </div>
-
-    </div>
+  <!-- BOTTOM ROW: Split View -->
+  <div class="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start relative">
     
-    <!-- Fallback if no order selected -->
-    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 h-full flex items-center justify-center p-8 text-center text-slate-500 dark:text-slate-400" *ngIf="!selectedSale">
-      <div>
-        <i class="pi pi-inbox text-5xl mb-3 text-slate-300 dark:text-slate-600 block"></i>
-        <h4 class="font-bold text-slate-700 dark:text-slate-300 text-base mb-1">Sin orden seleccionada</h4>
-        <p class="text-xs text-slate-400 dark:text-slate-500">Seleccione una orden de la lista de la izquierda para ver su detalle y cobrar.</p>
+    <!-- LEFT COLUMN: Pending Orders -->
+    <div class="lg:col-span-7 xl:col-span-8 flex flex-col h-full">
+      
+      <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 p-5 flex flex-col h-full">
+        <div class="flex justify-between items-center mb-4">
+          <div>
+            <h2 class="text-lg font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2">
+              <i class="pi pi-inbox text-indigo-600 dark:text-indigo-400"></i> Órdenes Pendientes de Cobro
+            </h2>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Seleccione una orden enviada desde los puntos de venta.</p>
+          </div>
+          <!-- Refresh button or extra controls could go here -->
+          <p-button icon="pi pi-sync" [text]="true" [rounded]="true" styleClass="text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700"></p-button>
+        </div>
+
+        <!-- Banded rows table -->
+        <div class="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-700 flex-1">
+          <p-table [value]="pendingSales" styleClass="p-datatable-sm p-datatable-striped">
+            <ng-template pTemplate="header">
+              <tr class="bg-slate-50 dark:bg-slate-800/80 text-slate-700 dark:text-slate-200 text-xs uppercase">
+                <th class="py-3 px-4">Order Code</th>
+                <th class="py-3 px-4">Productos</th>
+                <th class="py-3 px-4 text-right">Total</th>
+                <th class="py-3 px-4 text-center">Vendedor</th>
+                <th class="py-3 px-4 text-center">Acción</th>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-sale>
+              <tr class="text-sm border-b border-slate-100 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/40 transition-colors cursor-pointer"
+                  [class.bg-indigo-50]="selectedSale?.id === sale.id"
+                  [class.dark:bg-indigo-900/30]="selectedSale?.id === sale.id"
+                  (click)="selectSale(sale)">
+                
+                <!-- Order Code -->
+                <td class="px-4 font-mono font-bold text-indigo-600 dark:text-indigo-400 text-sm">
+                  {{ sale.orderCode }}
+                </td>
+
+                <!-- Products Summary -->
+                <td class="px-4">
+                  <div class="font-medium text-slate-800 dark:text-slate-100 line-clamp-1">
+                    {{ getProductsSummary(sale) }}
+                  </div>
+                  <div class="text-[11px] text-slate-400">
+                    {{ sale.fecha | date:'dd/MM/yyyy HH:mm' }}
+                  </div>
+                </td>
+
+                <!-- Total -->
+                <td class="px-4 text-right font-bold text-slate-900 dark:text-slate-100">
+                  ${{ formatPrice(sale.total) }}
+                </td>
+
+                <!-- Vendedor Code -->
+                <td class="px-4 text-center">
+                  <span class="inline-flex items-center gap-1 font-mono text-xs bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 px-2 py-1 rounded-md border border-slate-200 dark:border-slate-700">
+                    <i class="pi pi-user text-[10px] text-slate-400"></i>
+                    {{ sale.vendedorCode }}
+                  </span>
+                </td>
+
+                <!-- Select Action -->
+                <td class="px-4 text-center">
+                  <div class="flex items-center justify-center gap-1">
+                    <p-button [label]="selectedSale?.id === sale.id ? 'Atendiendo' : 'Atender'" 
+                              size="small" 
+                              [severity]="selectedSale?.id === sale.id ? 'primary' : 'secondary'"
+                              [outlined]="selectedSale?.id !== sale.id" 
+                              (onClick)="selectSale(sale)"></p-button>
+                    <!-- Nullify button -->
+                    <p-button icon="pi pi-times" [text]="true" [rounded]="true" severity="danger" 
+                              title="Anular venta" styleClass="text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/50"></p-button>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="5" class="text-center py-16 text-slate-400 dark:text-slate-500">
+                  <i class="pi pi-check-circle text-4xl mb-3 text-emerald-500/70 block"></i>
+                  <p class="font-medium text-slate-600 dark:text-slate-300">No hay órdenes pendientes</p>
+                  <p class="text-xs mt-1">Todas las órdenes han sido cobradas.</p>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
       </div>
     </div>
+
+    <!-- RIGHT COLUMN: Order Detail & Cobro Panel -->
+    <div class="lg:col-span-5 xl:col-span-4 sticky top-6 h-[calc(100vh-14rem)] flex flex-col">
+      <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 h-full flex flex-col p-5 overflow-hidden" *ngIf="selectedSale">
+        
+        <!-- Top Title: ORDERCODE -->
+        <div class="pb-4 mb-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center shrink-0">
+          <div>
+            <span class="text-[10px] uppercase tracking-widest font-bold text-slate-400">Orden Seleccionada</span>
+            <h2 class="text-2xl font-black font-mono text-indigo-600 dark:text-indigo-400 leading-none mt-1">
+              {{ selectedSale.orderCode }}
+            </h2>
+          </div>
+          <div class="text-right">
+            <span class="text-[10px] text-slate-400 block uppercase tracking-wider">Atendida por</span>
+            <span class="text-xs font-bold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-900 px-2 py-1 rounded border border-slate-200 dark:border-slate-700 inline-block mt-1">
+              <i class="pi pi-user text-[10px] mr-1"></i>{{ selectedSale.vendedorCode }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Banded rows order details -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+          <h3 class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2 shrink-0">
+            Detalles de la Orden
+          </h3>
+          
+          <div class="overflow-y-auto custom-scrollbar flex-1 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/30">
+            <table class="w-full text-sm text-left border-collapse">
+              <thead class="sticky top-0 bg-slate-100 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 z-10 shadow-sm">
+                <tr class="text-slate-500 dark:text-slate-400 text-[10px] uppercase tracking-wider">
+                  <th class="py-2.5 px-3">Producto</th>
+                  <th class="py-2.5 px-3 text-center">Cant.</th>
+                  <th class="py-2.5 px-3 text-right">Subtotal</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of selectedSale.items; let i = index" 
+                    class="border-b border-slate-100 dark:border-slate-700/60 hover:bg-white dark:hover:bg-slate-700/30 transition-colors">
+                  <td class="py-3 px-3">
+                    <div class="font-medium text-slate-800 dark:text-slate-100 text-xs">{{ item.nombre }}</div>
+                    <div class="text-[10px] text-slate-400 font-mono mt-0.5">{{ item.codigo }}</div>
+                  </td>
+                  <td class="py-3 px-3 text-center font-bold text-slate-700 dark:text-slate-300 text-xs">
+                    x{{ item.cantidad }}
+                  </td>
+                  <td class="py-3 px-3 text-right font-black text-slate-900 dark:text-slate-100 text-xs">
+                    ${{ formatPrice(item.subtotal) }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Totals details & Payment method -->
+        <div class="space-y-4 pt-5 border-t border-slate-200 dark:border-slate-700 mt-4 shrink-0">
+          
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between items-center text-slate-500 dark:text-slate-400">
+              <span>Subtotal:</span>
+              <span class="font-mono font-medium text-slate-800 dark:text-slate-200">${{ formatPrice(selectedSale.total) }}</span>
+            </div>
+            <div class="flex justify-between items-center text-slate-500 dark:text-slate-400" *ngIf="selectedSale.descuento > 0">
+              <span>Descuento:</span>
+              <span class="font-mono font-medium text-emerald-600 dark:text-emerald-400">-${{ formatPrice(selectedSale.descuento) }}</span>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-1.5">
+            <label class="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Método de Pago</label>
+            <p-dropdown [options]="paymentMethods" 
+                        [(ngModel)]="selectedPaymentMethod" 
+                        optionLabel="label" 
+                        optionValue="value" 
+                        styleClass="w-full text-sm"></p-dropdown>
+          </div>
+
+          <div class="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-700 flex justify-between items-center">
+            <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Total a Cobrar</span>
+            <span class="text-3xl font-black text-emerald-600 dark:text-emerald-400">${{ formatPrice(selectedSale.total) }}</span>
+          </div>
+
+          <!-- Confirmar button -->
+          <p-button label="Confirmar Cobro" 
+                    icon="pi pi-check-circle" 
+                    size="large" 
+                    styleClass="w-full text-lg font-bold py-4 rounded-xl shadow-md bg-emerald-600 hover:bg-emerald-700 text-white border-none transition-colors duration-200" 
+                    (onClick)="cobrar()"></p-button>
+        </div>
+
+      </div>
+      
+      <!-- Fallback if no order selected -->
+      <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 h-full flex flex-col items-center justify-center p-8 text-center text-slate-500 dark:text-slate-400" *ngIf="!selectedSale">
+        <div class="w-20 h-20 bg-slate-50 dark:bg-slate-900 rounded-full flex items-center justify-center mb-4 border border-slate-100 dark:border-slate-700">
+          <i class="pi pi-receipt text-4xl text-slate-300 dark:text-slate-600"></i>
+        </div>
+        <h4 class="font-bold text-slate-700 dark:text-slate-300 text-lg mb-1">Sin orden seleccionada</h4>
+        <p class="text-sm text-slate-400 dark:text-slate-500 max-w-[250px]">Seleccione una orden de la lista para ver el detalle y realizar el cobro.</p>
+      </div>
+    </div>
+
   </div>
 
 </div>
