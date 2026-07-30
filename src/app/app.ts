@@ -18,11 +18,10 @@ import { Modulo } from './core/models/permissions.model';
 export class App implements OnInit {
   protected readonly title = signal('FarmAS');
   authService = inject(AuthService);
-  private router = inject(Router);
+  public router = inject(Router);
   private platformId = inject(PLATFORM_ID);
   
   menuItems: MenuItem[] = [];
-  adminMenuItems: MenuItem[] = [];
   userInitial = 'U';
   isDarkMode = false;
   currentTime = new Date();
@@ -107,39 +106,5 @@ export class App implements OnInit {
         }
       }
     ];
-
-    // Admin menu items
-    const adminItems: MenuItem[] = [
-      {
-        label: 'Productos',
-        icon: 'pi pi-box',
-        command: () => this.router.navigate(['/admin/products'])
-      },
-      {
-        label: 'Inventario',
-        icon: 'pi pi-server',
-        command: () => this.router.navigate(['/admin/inventory'])
-      },
-      {
-        label: 'Clientes',
-        icon: 'pi pi-users',
-        command: () => this.router.navigate(['/admin/customers'])
-      }
-    ];
-
-    if (this.hasAdministracionPermission) {
-      adminItems.push({
-        label: 'Sucursales',
-        icon: 'pi pi-building',
-        command: () => this.router.navigate(['/admin/branches'])
-      });
-      adminItems.push({
-        label: 'Categorías',
-        icon: 'pi pi-tags',
-        command: () => this.router.navigate(['/admin/categories'])
-      });
-    }
-
-    this.adminMenuItems = adminItems;
   }
 }

@@ -6,89 +6,153 @@
   <router-outlet></router-outlet>
 </ng-container>
 
-<!-- Main App Layout -->
-<div *ngIf="!isLoginPage" class="flex flex-col h-screen bg-slate-100 dark:bg-slate-900 font-sans transition-colors duration-200">
-  <header class="h-20 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between px-4 lg:px-6 shrink-0 shadow-sm z-20 gap-4 transition-colors duration-200">
-    <!-- Left: Brand Logo & Time/Date -->
-    <div class="flex items-center gap-3.5 shrink-0">
-      <a routerLink="/overview" class="flex items-center gap-2.5 cursor-pointer group select-none">
-        <div class="w-9 h-9 bg-emerald-50 dark:bg-emerald-950/80 rounded-xl flex items-center justify-center border border-emerald-200 dark:border-emerald-800 shadow-sm p-1.5 group-hover:scale-105 transition-transform duration-200 shrink-0">
+<!-- Main App Layout (Sidebar + Header + Main Content) -->
+<div *ngIf="!isLoginPage" class="flex h-screen bg-slate-50 dark:bg-slate-900 font-sans transition-colors duration-200 overflow-hidden">
+  
+  <!-- SIDEBAR (Desktop) -->
+  <aside class="w-64 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 flex flex-col shrink-0 transition-all duration-300 z-30 hidden lg:flex shadow-sm">
+    <!-- Brand / Logo -->
+    <div class="h-20 flex items-center px-6 border-b border-slate-200 dark:border-slate-700 shrink-0">
+      <a routerLink="/overview" class="flex items-center gap-3 cursor-pointer group select-none">
+        <div class="w-10 h-10 bg-emerald-50 dark:bg-emerald-950/80 rounded-xl flex items-center justify-center border border-emerald-200 dark:border-emerald-800 shadow-sm p-1.5 group-hover:scale-105 transition-transform duration-200 shrink-0">
           <img src="favicon.svg" alt="FarmAS" class="w-full h-full object-contain" />
         </div>
-        <div class="flex flex-col hidden md:flex">
-          <span class="text-base font-extrabold text-slate-900 dark:text-white tracking-tight leading-none">FarmAS</span>
-          <span class="text-[9px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 mt-0.5">Farma Admin</span>
+        <div class="flex flex-col">
+          <span class="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-none">FarmAS</span>
+          <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 mt-0.5">Admin Platform</span>
         </div>
       </a>
-      <div class="h-7 w-px bg-slate-200 dark:bg-slate-700 hidden sm:block"></div>
-      <div class="flex flex-col items-center sm:items-start shrink-0">
-         <span class="text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight leading-none">{{ currentTime | date:'HH:mm' }}</span>
-         <span class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest mt-0.5">{{ currentTime | date:'dd MMM yyyy' }}</span>
-      </div>
     </div>
-    
-    <!-- Center: Nav links (Responsive & Overflow protected) -->
-    <nav class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar py-1.5 px-1 max-w-full">
-      <!-- POS / VENTAS -->
-      <a *ngIf="hasVentasPermission" routerLink="/pos" routerLinkActive="!bg-indigo-50 !text-indigo-600 !border-indigo-200 dark:!bg-indigo-950/70 dark:!text-indigo-300 dark:!border-indigo-800 font-semibold shadow-sm" 
-         class="shrink-0 whitespace-nowrap px-3.5 py-1.5 text-slate-600 dark:text-slate-300 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-900/80 transition-all duration-200 flex flex-col items-center gap-1 border border-transparent hover:border-slate-200 dark:hover:border-slate-700 cursor-pointer select-none group">
-         <i class="pi pi-desktop text-lg group-hover:scale-110 transition-transform duration-200"></i>
-         <span class="text-xs">Punto de Venta</span>
-      </a>
-      <!-- Overview / DASHBOARD -->
-      <a *ngIf="hasDashboardPermission" routerLink="/overview" routerLinkActive="!bg-indigo-50 !text-indigo-600 !border-indigo-200 dark:!bg-indigo-950/70 dark:!text-indigo-300 dark:!border-indigo-800 font-semibold shadow-sm" 
-         class="shrink-0 whitespace-nowrap px-3.5 py-1.5 text-slate-600 dark:text-slate-300 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-900/80 transition-all duration-200 flex flex-col items-center gap-1 border border-transparent hover:border-slate-200 dark:hover:border-slate-700 cursor-pointer select-none group">
-         <i class="pi pi-chart-pie text-lg group-hover:scale-110 transition-transform duration-200"></i>
-         <span class="text-xs">Rendimiento</span>
-      </a>
-      <!-- Analytics / GERENCIA -->
-      <a *ngIf="hasGerenciaPermission" routerLink="/analytics" routerLinkActive="!bg-indigo-50 !text-indigo-600 !border-indigo-200 dark:!bg-indigo-950/70 dark:!text-indigo-300 dark:!border-indigo-800 font-semibold shadow-sm" 
-         class="shrink-0 whitespace-nowrap px-3.5 py-1.5 text-slate-600 dark:text-slate-300 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-900/80 transition-all duration-200 flex flex-col items-center gap-1 border border-transparent hover:border-slate-200 dark:hover:border-slate-700 cursor-pointer select-none group">
-         <i class="pi pi-chart-line text-lg group-hover:scale-110 transition-transform duration-200"></i>
-         <span class="text-xs">Analytics</span>
-      </a>
-      <!-- Arqueo / GERENCIA -->
-      <a *ngIf="hasGerenciaPermission" routerLink="/shift-reconciliation" routerLinkActive="!bg-indigo-50 !text-indigo-600 !border-indigo-200 dark:!bg-indigo-950/70 dark:!text-indigo-300 dark:!border-indigo-800 font-semibold shadow-sm" 
-         class="shrink-0 whitespace-nowrap px-3.5 py-1.5 text-slate-600 dark:text-slate-300 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-900/80 transition-all duration-200 flex flex-col items-center gap-1 border border-transparent hover:border-slate-200 dark:hover:border-slate-700 cursor-pointer select-none group">
-         <i class="pi pi-wallet text-lg group-hover:scale-110 transition-transform duration-200"></i>
-         <span class="text-xs">Arqueo Caja</span>
-      </a>
-      <!-- Cashier / CAJA -->
-      <a *ngIf="hasCajaPermission" routerLink="/cashier" routerLinkActive="!bg-indigo-50 !text-indigo-600 !border-indigo-200 dark:!bg-indigo-950/70 dark:!text-indigo-300 dark:!border-indigo-800 font-semibold shadow-sm" 
-         class="shrink-0 whitespace-nowrap px-3.5 py-1.5 text-slate-600 dark:text-slate-300 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-900/80 transition-all duration-200 flex flex-col items-center gap-1 border border-transparent hover:border-slate-200 dark:hover:border-slate-700 cursor-pointer select-none group">
-         <i class="pi pi-inbox text-lg group-hover:scale-110 transition-transform duration-200"></i>
-         <span class="text-xs">Caja</span>
+
+    <!-- Navigation Links -->
+    <nav class="flex-1 overflow-y-auto py-6 px-4 space-y-1.5 custom-scrollbar">
+      <div class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3 px-2">Principal</div>
+      
+      <!-- Punto de Venta -->
+      <a *ngIf="hasVentasPermission" routerLink="/pos" routerLinkActive="!bg-indigo-50 !text-indigo-700 !border-indigo-200 dark:!bg-indigo-900/40 dark:!text-indigo-300 dark:!border-indigo-700 font-bold" 
+         class="flex items-center gap-3 px-3 py-2.5 text-sm text-slate-600 dark:text-slate-300 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-colors border border-transparent hover:border-slate-200 dark:hover:border-slate-700 group cursor-pointer">
+         <i class="pi pi-desktop text-lg text-slate-400 group-hover:text-indigo-500 transition-colors" [ngClass]="{'!text-indigo-600 dark:!text-indigo-400': router.url === '/pos'}"></i>
+         <span>Punto de Venta</span>
       </a>
 
-      <!-- Admin Dropdown Menu / ADMINISTRACION -->
-      <div *ngIf="hasAdministracionPermission" class="shrink-0">
-         <a (click)="adminMenu.toggle($event); $event.stopPropagation()" 
-            [ngClass]="isAdminRoute ? '!bg-indigo-50 !text-indigo-600 !border-indigo-200 dark:!bg-indigo-950/70 dark:!text-indigo-300 dark:!border-indigo-800 font-semibold shadow-sm' : 'border-transparent hover:border-slate-200 dark:hover:border-slate-700'"
-            class="whitespace-nowrap px-3.5 py-1.5 text-slate-600 dark:text-slate-300 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-900/80 transition-all duration-200 flex flex-col items-center gap-1 border cursor-pointer select-none group">
-            <i class="pi pi-cog text-lg group-hover:scale-110 transition-transform duration-200"></i>
-            <span class="text-xs flex items-center gap-1">Administración <i class="pi pi-angle-down text-[10px] ml-0.5 mt-[1px]"></i></span>
-         </a>
-         <p-menu #adminMenu [model]="adminMenuItems" [popup]="true" [appendTo]="'body'"></p-menu>
-      </div>
-
-      <!-- Settings (Configuración) -->
-      <a routerLink="/settings" routerLinkActive="!bg-indigo-50 !text-indigo-600 !border-indigo-200 dark:!bg-indigo-950/70 dark:!text-indigo-300 dark:!border-indigo-800 font-semibold shadow-sm" 
-         class="shrink-0 whitespace-nowrap px-3.5 py-1.5 text-slate-600 dark:text-slate-300 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-900/80 transition-all duration-200 flex flex-col items-center gap-1 border border-transparent hover:border-slate-200 dark:hover:border-slate-700 cursor-pointer select-none group">
-         <i class="pi pi-cog text-lg group-hover:scale-110 transition-transform duration-200"></i>
-         <span class="text-xs">Configuración</span>
+      <!-- Caja -->
+      <a *ngIf="hasCajaPermission" routerLink="/cashier" routerLinkActive="!bg-indigo-50 !text-indigo-700 !border-indigo-200 dark:!bg-indigo-900/40 dark:!text-indigo-300 dark:!border-indigo-700 font-bold" 
+         class="flex items-center gap-3 px-3 py-2.5 text-sm text-slate-600 dark:text-slate-300 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-colors border border-transparent hover:border-slate-200 dark:hover:border-slate-700 group cursor-pointer">
+         <i class="pi pi-inbox text-lg text-slate-400 group-hover:text-indigo-500 transition-colors" [ngClass]="{'!text-indigo-600 dark:!text-indigo-400': router.url === '/cashier'}"></i>
+         <span>Caja y Pagos</span>
       </a>
+
+      <div *ngIf="hasDashboardPermission || hasGerenciaPermission" class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mt-6 mb-3 px-2">Gerencia</div>
+      
+      <!-- Rendimiento -->
+      <a *ngIf="hasDashboardPermission" routerLink="/overview" routerLinkActive="!bg-indigo-50 !text-indigo-700 !border-indigo-200 dark:!bg-indigo-900/40 dark:!text-indigo-300 dark:!border-indigo-700 font-bold" 
+         class="flex items-center gap-3 px-3 py-2.5 text-sm text-slate-600 dark:text-slate-300 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-colors border border-transparent hover:border-slate-200 dark:hover:border-slate-700 group cursor-pointer">
+         <i class="pi pi-chart-pie text-lg text-slate-400 group-hover:text-indigo-500 transition-colors" [ngClass]="{'!text-indigo-600 dark:!text-indigo-400': router.url === '/overview'}"></i>
+         <span>Rendimiento</span>
+      </a>
+
+      <!-- Analytics -->
+      <a *ngIf="hasGerenciaPermission" routerLink="/analytics" routerLinkActive="!bg-indigo-50 !text-indigo-700 !border-indigo-200 dark:!bg-indigo-900/40 dark:!text-indigo-300 dark:!border-indigo-700 font-bold" 
+         class="flex items-center gap-3 px-3 py-2.5 text-sm text-slate-600 dark:text-slate-300 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-colors border border-transparent hover:border-slate-200 dark:hover:border-slate-700 group cursor-pointer">
+         <i class="pi pi-chart-line text-lg text-slate-400 group-hover:text-indigo-500 transition-colors" [ngClass]="{'!text-indigo-600 dark:!text-indigo-400': router.url === '/analytics'}"></i>
+         <span>Analytics</span>
+      </a>
+
+      <!-- Arqueo -->
+      <a *ngIf="hasGerenciaPermission" routerLink="/shift-reconciliation" routerLinkActive="!bg-indigo-50 !text-indigo-700 !border-indigo-200 dark:!bg-indigo-900/40 dark:!text-indigo-300 dark:!border-indigo-700 font-bold" 
+         class="flex items-center gap-3 px-3 py-2.5 text-sm text-slate-600 dark:text-slate-300 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-colors border border-transparent hover:border-slate-200 dark:hover:border-slate-700 group cursor-pointer">
+         <i class="pi pi-wallet text-lg text-slate-400 group-hover:text-indigo-500 transition-colors" [ngClass]="{'!text-indigo-600 dark:!text-indigo-400': router.url === '/shift-reconciliation'}"></i>
+         <span>Arqueo de Caja</span>
+      </a>
+
+      <div *ngIf="hasAdministracionPermission" class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mt-6 mb-3 px-2">Administración</div>
+      
+      <!-- Productos -->
+      <a *ngIf="hasAdministracionPermission" routerLink="/admin/products" routerLinkActive="!bg-indigo-50 !text-indigo-700 !border-indigo-200 dark:!bg-indigo-900/40 dark:!text-indigo-300 dark:!border-indigo-700 font-bold" 
+         class="flex items-center gap-3 px-3 py-2.5 text-sm text-slate-600 dark:text-slate-300 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-colors border border-transparent hover:border-slate-200 dark:hover:border-slate-700 group cursor-pointer">
+         <i class="pi pi-box text-lg text-slate-400 group-hover:text-indigo-500 transition-colors" [ngClass]="{'!text-indigo-600 dark:!text-indigo-400': router.url === '/admin/products'}"></i>
+         <span>Productos</span>
+      </a>
+
+      <!-- Inventario -->
+      <a *ngIf="hasAdministracionPermission" routerLink="/admin/inventory" routerLinkActive="!bg-indigo-50 !text-indigo-700 !border-indigo-200 dark:!bg-indigo-900/40 dark:!text-indigo-300 dark:!border-indigo-700 font-bold" 
+         class="flex items-center gap-3 px-3 py-2.5 text-sm text-slate-600 dark:text-slate-300 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-colors border border-transparent hover:border-slate-200 dark:hover:border-slate-700 group cursor-pointer">
+         <i class="pi pi-server text-lg text-slate-400 group-hover:text-indigo-500 transition-colors" [ngClass]="{'!text-indigo-600 dark:!text-indigo-400': router.url === '/admin/inventory'}"></i>
+         <span>Inventario</span>
+      </a>
+
+      <!-- Clientes -->
+      <a *ngIf="hasAdministracionPermission" routerLink="/admin/customers" routerLinkActive="!bg-indigo-50 !text-indigo-700 !border-indigo-200 dark:!bg-indigo-900/40 dark:!text-indigo-300 dark:!border-indigo-700 font-bold" 
+         class="flex items-center gap-3 px-3 py-2.5 text-sm text-slate-600 dark:text-slate-300 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-colors border border-transparent hover:border-slate-200 dark:hover:border-slate-700 group cursor-pointer">
+         <i class="pi pi-users text-lg text-slate-400 group-hover:text-indigo-500 transition-colors" [ngClass]="{'!text-indigo-600 dark:!text-indigo-400': router.url === '/admin/customers'}"></i>
+         <span>Clientes</span>
+      </a>
+
+      <!-- Sucursales -->
+      <a *ngIf="hasAdministracionPermission" routerLink="/admin/branches" routerLinkActive="!bg-indigo-50 !text-indigo-700 !border-indigo-200 dark:!bg-indigo-900/40 dark:!text-indigo-300 dark:!border-indigo-700 font-bold" 
+         class="flex items-center gap-3 px-3 py-2.5 text-sm text-slate-600 dark:text-slate-300 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-colors border border-transparent hover:border-slate-200 dark:hover:border-slate-700 group cursor-pointer">
+         <i class="pi pi-building text-lg text-slate-400 group-hover:text-indigo-500 transition-colors" [ngClass]="{'!text-indigo-600 dark:!text-indigo-400': router.url === '/admin/branches'}"></i>
+         <span>Sucursales</span>
+      </a>
+
+      <!-- Categorías -->
+      <a *ngIf="hasAdministracionPermission" routerLink="/admin/categories" routerLinkActive="!bg-indigo-50 !text-indigo-700 !border-indigo-200 dark:!bg-indigo-900/40 dark:!text-indigo-300 dark:!border-indigo-700 font-bold" 
+         class="flex items-center gap-3 px-3 py-2.5 text-sm text-slate-600 dark:text-slate-300 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-colors border border-transparent hover:border-slate-200 dark:hover:border-slate-700 group cursor-pointer">
+         <i class="pi pi-tags text-lg text-slate-400 group-hover:text-indigo-500 transition-colors" [ngClass]="{'!text-indigo-600 dark:!text-indigo-400': router.url === '/admin/categories'}"></i>
+         <span>Categorías</span>
+      </a>
+
     </nav>
     
-    <!-- Right: Avatar -->
-    <div class="flex items-center gap-4 shrink-0">
-      <div class="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-950/80 flex items-center justify-center text-indigo-700 dark:text-indigo-300 font-bold text-sm cursor-pointer hover:bg-indigo-200 dark:hover:bg-indigo-900 transition-colors border border-indigo-200 dark:border-indigo-800 select-none shadow-sm" (click)="profileMenu.toggle($event); $event.stopPropagation()">
-        {{ userInitial }}
+    <!-- User Footer in Sidebar -->
+    <div class="p-4 border-t border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50">
+      <div class="flex items-center gap-3 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700/80 p-2 rounded-xl transition-colors" (click)="profileMenu.toggle($event); $event.stopPropagation()">
+        <div class="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/80 flex items-center justify-center text-indigo-700 dark:text-indigo-300 font-bold text-sm border border-indigo-200 dark:border-indigo-800 shadow-sm shrink-0">
+          {{ userInitial }}
+        </div>
+        <div class="flex flex-col flex-1 overflow-hidden">
+          <span class="text-sm font-bold text-slate-800 dark:text-slate-100 truncate">Usuario Activo</span>
+          <span class="text-xs text-slate-500 dark:text-slate-400 truncate">Ver opciones</span>
+        </div>
+        <i class="pi pi-ellipsis-v text-slate-400 text-sm"></i>
       </div>
       <p-menu #profileMenu [model]="menuItems" [popup]="true" [appendTo]="'body'"></p-menu>
     </div>
-  </header>
-  
-  <main class="flex-1 overflow-auto w-full max-w-[1600px] mx-auto">
-    <router-outlet></router-outlet>
-  </main>
+  </aside>
+
+  <!-- MAIN CONTENT AREA -->
+  <div class="flex-1 flex flex-col overflow-hidden relative w-full">
+    
+    <!-- Header (Mobile/Global Info) -->
+    <header class="h-16 bg-white/80 dark:bg-slate-800/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-700 flex items-center justify-between px-4 sm:px-6 shrink-0 z-20 transition-colors duration-200">
+      
+      <!-- Mobile Nav Toggle (Hidden on LG) -->
+      <div class="lg:hidden flex items-center gap-3">
+        <button class="p-2 -ml-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+          <i class="pi pi-bars text-xl"></i>
+        </button>
+        <span class="text-lg font-extrabold text-slate-800 dark:text-slate-100">FarmAS</span>
+      </div>
+
+      <!-- Desktop header spacing -->
+      <div class="hidden lg:block flex-1"></div>
+
+      <!-- Date & Time (Right side) -->
+      <div class="flex items-center gap-6 shrink-0">
+        <div class="flex flex-col items-end">
+          <span class="text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight leading-none">{{ currentTime | date:'HH:mm' }}</span>
+          <span class="text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest mt-0.5">{{ currentTime | date:'dd MMM yyyy' }}</span>
+        </div>
+        <!-- Theme Toggle -->
+        <button (click)="toggleTheme()" class="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors border border-slate-200 dark:border-slate-600">
+          <i class="pi" [ngClass]="isDarkMode ? 'pi-sun text-amber-500' : 'pi-moon'"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Page Content -->
+    <main class="flex-1 overflow-auto bg-slate-50 dark:bg-slate-900 w-full relative">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
 </div>
